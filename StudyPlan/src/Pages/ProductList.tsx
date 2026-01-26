@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import ProductCard from '../Components/ProductCard'
+import { useState, useEffect } from 'react';
+import ProductCard from '../Components/ProductCard';
 import './PagesList.css'
-
 type Product = {
   id: number;
   name: string;
@@ -9,43 +9,54 @@ type Product = {
   image: string;
 }
 
+type APIProduct = {
+  id: number;
+  title: string;
+  price: number;
+  thumbnail: string;
+}
+
 type ProductListProps = {
   addToCart: (product: Product) => void;
 }
 
 function ProductList({ addToCart }: ProductListProps) {
-  const products: Product[] = [
-    {
-      id: 1,
-      name: "MacBook Pro",
-      price: 1500,
-      image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&h=400&fit=crop"
-    },
-    {
-      id: 2,
-      name: "Wireless Headphones",
-      price: 200,
-      image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=400&fit=crop"
-    },
-    {
-      id: 3,
-      name: "iPhone 15 Pro",
-      price: 900,
-      image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&h=400&fit=crop"
-    },
-    {
-      id: 4,
-      name: "iPad Air",
-      price: 500,
-      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500&h=400&fit=crop"
-    },
-    {
-      id: 5,
-      name: "Apple Watch",
-      price: 399,
-      image: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=500&h=400&fit=crop"
-    }
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('https://dummyjson.com/products');
+        const data = await response.json();
+        
+        const formattedProducts = data.products.map((item: APIProduct) => ({
+          id: item.id,
+          name: item.title,
+          price: item.price,
+          image: item.thumbnail
+        }));
+        
+        setProducts(formattedProducts);
+        setLoading(false);
+      } catch  {
+        setError('Failed to fetch products');
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return <div className="product-list-container"><h1>Loading products...</h1></div>;
+  }
+
+  if (error) {
+    return <div className="product-list-container"><h1>Error: {error}</h1></div>;
+  }
 
   return (
     <div className="product-list-container">

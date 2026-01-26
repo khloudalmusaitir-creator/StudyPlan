@@ -1,4 +1,6 @@
+import { Link } from 'react-router';
 import './CartPage.css'
+
 
 type Product = {
   id: number;
@@ -9,9 +11,10 @@ type Product = {
 
 type CartPageProps = {
   cartItems: Product[];
+  removeFromCart: (index: number) => void; 
 }
 
-function CartPage({ cartItems }: CartPageProps) {
+function CartPage({ cartItems,removeFromCart }: CartPageProps) {
   // Calculate the total price
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
 
@@ -30,13 +33,19 @@ function CartPage({ cartItems }: CartPageProps) {
                   <h3>{item.name}</h3>
                   <p>${item.price}</p>
                 </div>
-                <button className="remove-button">Remove</button>
+                <button className="remove-button" onClick={() => removeFromCart(index)}
+>
+Remove
+</button>
               </div>
             ))}
           </div>
           
           <div className="cart-total">
             <h2>Total: ${totalPrice}</h2>
+            <Link to ="/checkout">
+            <button className="checkout-button"> Press to Check out</button>
+            </Link>
           </div>
         </>
       )}

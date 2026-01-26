@@ -4,6 +4,7 @@ import ProductList from './Pages/ProductList'
 import ProductDetailPage from './Details/ProductDetailPage'
 import Navbar from './Components/Navbar'
 import CartPage from './Pages/CartPage' 
+import CheckoutPage from './Pages/CheckoutPage'
 
 type Product = {
   id: number;
@@ -19,13 +20,17 @@ function App() {
     setCartItems([...cartItems, product])
   }
 
+const removeFromCart = (indexToRemove: number) => {
+  setCartItems(cartItems.filter((_, index) => index !== indexToRemove));
+};
 return (
   <>
     <Navbar cartCount={cartItems.length} />
     <Routes>
       <Route path="/" element={<ProductList addToCart={addToCart} />} />
       <Route path="/product/:id" element={<ProductDetailPage />} />
-      <Route path="/cart" element={<CartPage cartItems={cartItems} />} />
+      <Route path="/cart" element={<CartPage cartItems={cartItems} removeFromCart={removeFromCart} />} />
+      <Route path ="/checkout" element ={<CheckoutPage/>}/>
     </Routes>
   </>
 )
