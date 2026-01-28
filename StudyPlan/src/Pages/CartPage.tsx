@@ -1,20 +1,15 @@
-import { Link } from 'react-router';
-import './CartPage.css'
+import { Link } from 'react-router-dom';
+import './CartPage.css';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '../store/store';
+import { removeFromCart } from '../store/cartSlice';
 
 
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-}
 
-type CartPageProps = {
-  cartItems: Product[];
-  removeFromCart: (index: number) => void; 
-}
+function CartPage() {
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
 
-function CartPage({ cartItems,removeFromCart }: CartPageProps) {
   // Calculate the total price
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
 
@@ -33,18 +28,17 @@ function CartPage({ cartItems,removeFromCart }: CartPageProps) {
                   <h3>{item.name}</h3>
                   <p>${item.price}</p>
                 </div>
-                <button className="remove-button" onClick={() => removeFromCart(index)}
->
-Remove
-</button>
+                <button className="remove-button" onClick={() => dispatch(removeFromCart(index))}>
+                  Remove
+                </button>
               </div>
             ))}
           </div>
-          
+
           <div className="cart-total">
             <h2>Total: ${totalPrice}</h2>
-            <Link to ="/checkout">
-            <button className="checkout-button"> Press to Check out</button>
+            <Link to="/checkout">
+              <button className="checkout-button">Proceed to Checkout</button>
             </Link>
           </div>
         </>
@@ -53,7 +47,7 @@ Remove
   )
 }
 
-export default CartPage
+export default CartPage;
 
 
 

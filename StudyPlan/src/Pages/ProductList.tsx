@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ProductCard from '../Components/ProductCard';
-import './PagesList.css'
+import './PagesList.css';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../store/cartSlice';
+
 type Product = {
   id: number;
   name: string;
@@ -16,14 +19,12 @@ type APIProduct = {
   thumbnail: string;
 }
 
-type ProductListProps = {
-  addToCart: (product: Product) => void;
-}
-
-function ProductList({ addToCart }: ProductListProps) {
+function ProductList() {
+  const dispatch = useDispatch();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,17 +32,17 @@ function ProductList({ addToCart }: ProductListProps) {
         setLoading(true);
         const response = await fetch('https://dummyjson.com/products');
         const data = await response.json();
-        
+
         const formattedProducts = data.products.map((item: APIProduct) => ({
           id: item.id,
           name: item.title,
           price: item.price,
           image: item.thumbnail
         }));
-        
+
         setProducts(formattedProducts);
         setLoading(false);
-      } catch  {
+      } catch {
         setError('Failed to fetch products');
         setLoading(false);
       }
@@ -58,18 +59,29 @@ function ProductList({ addToCart }: ProductListProps) {
     return <div className="product-list-container"><h1>Error: {error}</h1></div>;
   }
 
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="product-list-container">
       <h1 className="page-title">Kholoud Products</h1>
+      <input
+        type="text"
+        className="search-bar"
+        placeholder="Search products..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       <div className="product-grid">
-        {products.map(product => (
+        {filteredProducts.map(product => (
           <Link to={`/product/${product.id}`} key={product.id} style={{ textDecoration: 'none' }}>
             <ProductCard
               id={product.id}
               name={product.name}
               price={product.price}
               image={product.image}
-              onAddToCart={() => addToCart(product)}
+              onAddToCart={() => dispatch(addToCart(product))}
             />
           </Link>
         ))}
