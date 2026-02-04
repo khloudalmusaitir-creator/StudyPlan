@@ -11,7 +11,7 @@ function Navbar({ cartCount }: NavbarProps) {
       </Link>
       <div css={navStyle.navCart}>
         <Link to="/cart">
-          {content.navbar.cartText}
+          🛒 {content.navbar.cartText}
           <span css={navStyle.cartCount}>{cartCount}</span>
         </Link>
       </div>

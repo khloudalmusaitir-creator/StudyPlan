@@ -1,7 +1,7 @@
 import { productCardStyles } from './ProductCard.styles';
 import { type Product } from '../Types/types';
 
-function ProductCard({ id, name, price, image, onAddToCart }: Product) {
+function ProductCard({ name, price, image, onAddToCart }: Product) {
   return (
     <div css={productCardStyles.card}>
       <div css={productCardStyles.imageContainer}>
@@ -16,7 +16,7 @@ function ProductCard({ id, name, price, image, onAddToCart }: Product) {
         >
           Add to Cart
         </button>
-        <p>{id}</p>
+
       </div>
     </div>
   );
