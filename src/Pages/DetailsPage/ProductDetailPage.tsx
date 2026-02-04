@@ -1,59 +1,55 @@
 import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./ProductDetailPage.css";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
 import { toast } from "react-toastify";
 
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  description: string;
+}
+
 function ProductDetailPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  //TODO: here u can use fetch to get the specific product using its id already in the api
-  const products = [
-    {
-      id: 1,
-      name: "MacBook Pro",
-      price: 1500,
-      image:
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
-      description: "DETAILS",
-    },
-    {
-      id: 2,
-      name: "Wireless Headphones",
-      price: 200,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
-      description: "DETAILS...",
-    },
-    {
-      id: 3,
-      name: "iPhone 15 Pro",
-      price: 900,
-      image:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800",
-      description: "DETAILS...",
-    },
-    {
-      id: 4,
-      name: "iPad Air",
-      price: 500,
-      image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800",
-      description: "DETAILS",
-    },
-    {
-      id: 5,
-      name: "Apple Watch",
-      price: 399,
-      image:
-        "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800",
-      description: "DETAILS...",
-    },
-  ];
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`https://dummyjson.com/products/${id}`);
+        if (!response.ok) {
+          setError(true);
+          return;
+        }
+        const data = await response.json();
+        setProduct({
+          id: data.id,
+          name: data.title,
+          price: data.price,
+          image: data.thumbnail,
+          description: data.description,
+        });
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
 
-  const product = products.find((p) => p.id === Number(id));
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!product) {
+  if (error || !product) {
     return <div>Product not found!</div>;
   }
 

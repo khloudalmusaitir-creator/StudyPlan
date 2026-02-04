@@ -1,23 +1,24 @@
-import { Card, ImageContainer, ProductImage, ProductInfo, ProductName, ProductPrice, AddToCartButton } from './ProductCard.styles';
+import { productCardStyles } from './ProductCard.styles';
 import { type Product } from '../Types/types';
-
-
 
 function ProductCard({ id, name, price, image, onAddToCart }: Product) {
   return (
-    <Card>
-      <ImageContainer>
-        <ProductImage src={image} alt={name} />
-      </ImageContainer>
-      <ProductInfo>
-        <ProductName>{name}</ProductName>
-        <ProductPrice>${price}</ProductPrice>
-        <AddToCartButton onClick={(e) => { e.preventDefault(); onAddToCart?.(); }}>
+    <div css={productCardStyles.card}>
+      <div css={productCardStyles.imageContainer}>
+        <img css={productCardStyles.productImage} src={image} alt={name} />
+      </div>
+      <div css={productCardStyles.productInfo}>
+        <h3 css={productCardStyles.productName}>{name}</h3>
+        <p css={productCardStyles.productPrice}>${price}</p>
+        <button 
+          css={productCardStyles.addToCartButton} 
+          onClick={(e) => { e.preventDefault(); onAddToCart?.(); }}
+        >
           Add to Cart
-        </AddToCartButton>
+        </button>
         <p>{id}</p>
-      </ProductInfo>
-    </Card>
+      </div>
+    </div>
   );
 }
 

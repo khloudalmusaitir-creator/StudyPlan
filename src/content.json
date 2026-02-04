@@ -1,3 +1,21 @@
- {
-    "title": "kholoud store"
- }
+{
+  "navbar": {
+   "storeName": "Kholoud Shop",
+   "cartText": "Your Cart"
+},
+
+"homepage": {
+   "title": "Kholoud products",
+   "SearchPlaceHolder": "Search here"
+},
+
+"productCard": {
+   "addToCartButton": "add to cart",
+   "addedToast": "added to cart"
+},
+"cart": {
+   "title": "shopping cart",
+   "empty messgae": "your cart is empty",
+   "checkoutButton": "Checkout"
+}
+}
